@@ -35,3 +35,28 @@ class DatabaseInteractions:
 
             # Display information that item has been added to shop inventory
             messagebox.showinfo("Success", "Item has been added to shop inventory!")
+
+    # Get all items from database and return Array with it name's (1st tuple valie) and id's (2nd value from tuple)
+    def get_items(self) -> tuple[list[str], list[str]]:
+        # Ready list with obtained items name's and id's
+        ready_output = ([], []) # 1st = name's list, 2nd = id's list
+        
+        # Execute SQL Query
+        with self.ac.cursor() as cursor:
+            # Plan Query
+            QUERY_OBTAIN_NAMES = """SELECT item_name, id FROM shop_items"""
+            cursor.execute(QUERY_OBTAIN_NAMES)
+
+            # Execute query by send it to database
+            item_names = cursor.fetchall()
+
+            # Obtain name and id from returend by database library output and put these results to returning list with names and ids
+            for name_tuple in item_names:
+                # Append name
+                ready_output[0].append(name_tuple[0])
+
+                # Append id
+                ready_output[1].append(name_tuple[1])
+
+        # Return obtained item names and ids or empty list for each subsequent id and name list        
+        return ready_output

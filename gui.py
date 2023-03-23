@@ -83,9 +83,48 @@ class GUIComponents():
         go_back = tkinter.Button(self.chld, text="Go back", command=lambda: self._spawn_default_guicomponents())
         go_back.pack()
 
-
+    # Displaying items from shop inventory
     def menu_inventory(self):
-        pass
+        # Clear previous widgets from frame for widgets
+        self.chld.destroy()
+
+        # Get items names from database or obtain empty list (without any names => should be obtained when shop inventory database is empty)
+        (items_names_list, items_ids_list) = database_psql.get_items()
+        
+        # Creating this menu widgets
+        self.chld = tkinter.Frame(width=self.main.winfo_width(), height=self.main.winfo_height())
+        self.chld.rowconfigure(0)
+        self.chld.rowconfigure(1)
+        self.chld.pack()
+
+         # Title for spawning menu
+        title = tkinter.Label(self.chld, text="Shop inventory items list:")
+        title.grid(row=0, pady=10, sticky=tkinter.W, padx=10)
+
+         # Frame for items
+        for_items_frame = tkinter.Frame(master=self.chld)
+        for_items_frame.columnconfigure(0, weight=2)
+        for_items_frame.columnconfigure(1, weight=1)
+        for_items_frame.grid(row=1)
+
+         # Add items to list for items and ability to delete each subsequent item from shop inventory database
+        idx = 0
+        for item_name in items_names_list:
+            # Add item name
+            txt_itn = tkinter.Label(for_items_frame, text=item_name, pady=5)
+            txt_itn.grid(column=0, row=idx)
+
+            # Button to delete item with this item name
+            delete_item = lambda: ""
+            btn_delete = tkinter.Button(for_items_frame, text="DELETE", command=delete_item)
+            btn_delete.grid(row=idx, column=1, padx=5, pady=5)
+
+            # Increase iterated items counter
+            idx+=1
+
+        # Go back button
+        go_back = tkinter.Button(self.chld, text="Go back", command=lambda: self._spawn_default_guicomponents())
+        go_back.pack(pady=10)
 
 
 
