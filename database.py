@@ -60,3 +60,15 @@ class DatabaseInteractions:
 
         # Return obtained item names and ids or empty list for each subsequent id and name list        
         return ready_output
+    
+    # Delete specified shop item by its id. Item after pass existing id will be delete from shop inventory items database
+    def delete_item(self, item_id: str):
+        # Execute SQL Query
+        with self.ac.cursor() as cursor:
+            # Plan Query
+            QUERY_DELETE_SPECIFIC_ELEMENT = """DELETE FROM shop_items WHERE id=%s"""
+            cursor.execute(QUERY_DELETE_SPECIFIC_ELEMENT, (item_id,))
+
+            # Execute query by send it to database
+            self.ac.commit()
+            

@@ -14,3 +14,8 @@ class Tests(unittest.TestCase):
 
         # Print result to stdout
         print(item_names)
+
+    # Test whether function to delete items from database works correctly
+    def test_database_delete_item(self):
+        delete_item_db_operation = DatabaseInteractions().delete_item("1")
+        pass
