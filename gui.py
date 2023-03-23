@@ -1,3 +1,4 @@
+import tkinter.messagebox as tkmb
 import tkinter
 import database
 from win32api import GetSystemMetrics
@@ -109,14 +110,32 @@ class GUIComponents():
 
          # Add items to list for items and ability to delete each subsequent item from shop inventory database
         idx = 0
-        for item_name in items_names_list:
+        for item_name in items_names_list:            
             # Add item name
             txt_itn = tkinter.Label(for_items_frame, text=item_name, pady=5)
             txt_itn.grid(column=0, row=idx)
 
             # Button to delete item with this item name
-            delete_item = lambda: ""
-            btn_delete = tkinter.Button(for_items_frame, text="DELETE", command=delete_item)
+             # Function which wraps identifier of clicked element
+            def wrapper_delete_item(idx):
+                # Obtain id of clicked element button
+                element_id_to_delete: str = items_ids_list[idx]
+
+                # Return to button command param function which deletes this specific element from database
+                return lambda: delete_element(element_id_to_delete)
+            
+             # Function to delete elements from database with displaying changes within GUI 
+            def delete_element(id: str):
+                # Delete item from database
+                database_psql.delete_item(id)
+
+                # Show information box alert to user using GUI
+                tkmb.showinfo("Success", "This element has been deleted from shop inventory items database!")
+
+                # Refresh inventory items list by destroy it and re-create again
+                self.menu_inventory()
+
+            btn_delete = tkinter.Button(for_items_frame, text="DELETE", command=wrapper_delete_item(idx))
             btn_delete.grid(row=idx, column=1, padx=5, pady=5)
 
             # Increase iterated items counter
@@ -124,7 +143,7 @@ class GUIComponents():
 
         # Go back button
         go_back = tkinter.Button(self.chld, text="Go back", command=lambda: self._spawn_default_guicomponents())
-        go_back.pack(pady=10)
+        go_back.grid(column=0, row=idx+1, pady=10)
 
 
 
