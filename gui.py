@@ -60,6 +60,11 @@ class GUIComponents():
 
         self.chld.pack()
 
+    # Adding go back button to Frame GUI tkinter widget with each another tkinter widgets 
+    def _go_back(self, row_id, colspan=1) -> None:
+        go_back = tkinter.Button(self.chld, text="Go back", command=lambda: self._spawn_default_guicomponents())
+        go_back.grid(column=0, row=row_id, pady=10, columnspan=colspan)
+
     # Create menu with capabilities to add new items to shop inventory
     def menu_additions(self):
         # Destroy previous children widget of main window from GUI
@@ -67,22 +72,33 @@ class GUIComponents():
 
         # Create this specific menu widgets
         self.chld = tkinter.Frame(self.main, width=500, height=300)
-
-        i_nameL = tkinter.Label(self.chld, text="Item name")
-        i_nameL.pack()
-
-        i_nameI = tkinter.Entry(self.chld)
-        i_nameI.pack()
-
-        # Button to add new items
-        i_addB = tkinter.Button(self.chld, text="Add new item", command=lambda: database_psql.add_new_item(i_nameI.get()))
-        i_addB.pack()
-        # Add frame widget to main window GUI
+        self.chld.rowconfigure(0)
+        self.chld.rowconfigure(1)
+        self.chld.rowconfigure(2)
+        self.chld.rowconfigure(3)
+        self.chld.columnconfigure(0)
+        self.chld.columnconfigure(1)
         self.chld.pack()
 
-        # Go back button
-        go_back = tkinter.Button(self.chld, text="Go back", command=lambda: self._spawn_default_guicomponents())
-        go_back.pack()
+         # Name for whole interface action (for which action this interface will be creating)
+        i_nameL = tkinter.Label(self.chld, text="Adding new items to shop inventory:")
+        i_nameL.grid(column=0, row=0, pady=20)
+
+         # Name for Entry widget action
+        i_nameL = tkinter.Label(self.chld, text="Item name")
+        i_nameL.grid(column=0, row=1, pady=3)
+
+         # Adding entry for widget (tkinter) for capture user input
+        i_nameI = tkinter.Entry(self.chld)
+        i_nameI.grid(column=1, row=1, padx=3, pady=3)
+
+         # Button to add new items
+        i_addB = tkinter.Button(self.chld, text="Add new item", command=lambda: database_psql.add_new_item(i_nameI.get()))
+        i_addB.grid(row=2, columnspan=2, pady=2)
+        
+         # Go back button
+        self._go_back(row_id=3, colspan=2)
+        
 
     # Displaying items from shop inventory
     def menu_inventory(self):
@@ -142,8 +158,7 @@ class GUIComponents():
             idx+=1
 
         # Go back button
-        go_back = tkinter.Button(self.chld, text="Go back", command=lambda: self._spawn_default_guicomponents())
-        go_back.grid(column=0, row=idx+1, pady=10)
+        self._go_back(idx+1)
 
 
 
