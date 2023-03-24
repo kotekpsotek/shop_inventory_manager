@@ -16,8 +16,11 @@ class GUIComponents():
         # config window
         self._config()
 
+        # spawn "user login panel"
+        self.login_panel()
+
         # spawn default component for window
-        self._spawn_default_guicomponents()
+        # self._spawn_default_guicomponents()
 
         # spawn tkinter GUI window
         self.main.mainloop()
@@ -65,6 +68,48 @@ class GUIComponents():
         go_back = tkinter.Button(self.chld, text="Go back", command=lambda: self._spawn_default_guicomponents())
         go_back.grid(column=0, row=row_id, pady=10, columnspan=colspan)
 
+    # Login user to allow he/she to access, to another application GUI features
+    def login_panel(self):
+        # For mailfunctions handling: Destroy previous children widget of main window from GUI
+        if self.chld:
+            self.chld.destroy()
+        
+        # Main feature = creating login panel is performed under this comment = description
+        self.chld = tkinter.Frame(self.main)
+        self.chld.rowconfigure(0)
+        self.chld.rowconfigure(1)
+        self.chld.rowconfigure(2)
+        self.chld.rowconfigure(3)
+        self.chld.columnconfigure(0)
+        self.chld.columnconfigure(1)
+        self.chld.pack()
+
+         # Create this menu action description (Label widget with text 'Login yourself first')
+        d_login = tkinter.Label(self.chld, text="Login yourself first")
+        d_login.grid(columnspan=2, row=0)
+
+         # Create entry for login from user (capture user login)
+        d_login = tkinter.Label(self.chld, text="Login")
+        d_login.grid(column=0, row=1, pady=3)
+        
+        i_login = tkinter.Entry(self.chld)
+        i_login.grid(column=1, row=1, pady=3, padx=3)
+
+         # Create entry for user password (capture user password)
+        d_password = tkinter.Label(self.chld, text="Password")
+        d_password.grid(column=0, row=2, pady=3)
+        
+        i_password = tkinter.Entry(self.chld)
+        i_password.grid(column=1, row=2, pady=3, padx=3)
+
+         # Login user button (user must click it to login yourself using passed login and password to above input=Entry widgets fields)
+          # Function performing when user click on button with "Login" text
+        def perform_login_operation():
+            pass
+         
+        b_login = tkinter.Button(self.chld, text="Login", command=perform_login_operation)
+        b_login.grid(row=3, columnspan=2, pady=10)
+
     # Create menu with capabilities to add new items to shop inventory
     def menu_additions(self):
         # Destroy previous children widget of main window from GUI
@@ -98,7 +143,6 @@ class GUIComponents():
         
          # Go back button
         self._go_back(row_id=3, colspan=2)
-        
 
     # Displaying items from shop inventory
     def menu_inventory(self):
