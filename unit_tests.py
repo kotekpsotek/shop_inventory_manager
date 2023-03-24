@@ -19,3 +19,8 @@ class Tests(unittest.TestCase):
     def test_database_delete_item(self):
         delete_item_db_operation = DatabaseInteractions().delete_item("1")
         pass
+
+    # Test whether database function "get_user_password" return password of user which exist
+    def test_get_user_from_database(self):
+        user_password = DatabaseInteractions().get_user_password("abcd")
+        print(user_password)

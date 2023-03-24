@@ -71,4 +71,21 @@ class DatabaseInteractions:
 
             # Execute query by send it to database
             self.ac.commit()
-            
+
+    # GET user password from user with specific user_name param as his login from PostgreSQL database
+    def get_user_password(self, user_name: str) -> str:
+        # Execute SQL Query
+        with self.ac.cursor() as cursor:
+            # Plan Query
+            QUERY_GET_SPECIFIC_USER = """SELECT password FROM users WHERE login=%s"""
+            cursor.execute(QUERY_GET_SPECIFIC_USER, (user_name,))
+
+            # Execute query by send it to database
+            result = cursor.fetchone()
+
+            # When this specific user doesn't exist empty string will be returning
+            if result == None:
+                return ""
+    
+            # Return function outcome which is not empty user password
+            return result
