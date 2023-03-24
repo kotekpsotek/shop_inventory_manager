@@ -1,10 +1,14 @@
 import tkinter.messagebox as tkmb
 import tkinter
 import database
+from hashlib import shake_256
 from win32api import GetSystemMetrics
 
 # PostgreSQL database establoshed connection
 database_psql = database.DatabaseInteractions()
+
+# Save logged user under below variable (this commented variable)
+logged_user = () # 1st = login = user name, 2nd = password = password shake_256 signature
 
 # Create GUI with widgets and all functionalities (within class created instance)
 class GUIComponents():
@@ -105,7 +109,40 @@ class GUIComponents():
          # Login user button (user must click it to login yourself using passed login and password to above input=Entry widgets fields)
           # Function performing when user click on button with "Login" text
         def perform_login_operation():
-            pass
+            user_login = i_login.get()
+            user_password = i_password.get()
+            print(user_login, user_password)
+
+            if len(user_login) > 0 and len(user_password) > 0:
+                user_password_db = database_psql.get_user_password(user_login)
+
+                # When user doesn't exist "user_password_db" variable will be equal to empty string
+                if len(user_password_db) == 0:
+                    tkmb.showerror("Incorrect login", "You pass incorrect login")
+                else:
+                    # Login user
+                     # Create shake_256 signature from entered by user password to compare it in equality site with password obtained from database
+                    base = shake_256()
+                    base.update(bytes(user_password, "utf-8"))
+                    user_password_sign = base.hexdigest(64)
+
+                    print(user_password_sign)
+
+                     # Compare signature with signature password from database and when is equal login user
+                    if user_password_sign == user_password_db:
+                        # Login user when passwords are equal to each other
+                        logged_user = (user_login, user_password_sign)
+
+                        # Display alert that user has been successfully logged into application
+                        tkmb.showinfo("Success", "You has been successfully logged!")
+                        
+                        # Display to user default user components
+                        self._spawn_default_guicomponents()
+                    else:
+                        # Show that user pass incorrect passwor
+                        tkmb.showerror("Error", "You pass incorrect password!")
+            else:
+                tkmb.showerror("Error", "'Your login' and 'Your password' fields cannot be empty'")
          
         b_login = tkinter.Button(self.chld, text="Login", command=perform_login_operation)
         b_login.grid(row=3, columnspan=2, pady=10)
